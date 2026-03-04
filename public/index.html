@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jo's Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070f;--s1:#0d0d1c;--s2:#13132a;--s3:#1a1a35;
+  --b1:#252545;--b2:#34345a;
+  --text:#eeeeff;--muted:#6868a0;--dim:#3a3a60;
+  --lime:#b8ff45;--lime2:#98dd30;
+  --purple:#9b6dff;--pink:#ff4d8d;
+  --ig:#e1306c;--tt:#ff0050;--tw:#1d9bf0;
+  --r:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ── SIDEBAR ── */
+.sb{position:fixed;left:0;top:0;bottom:0;width:186px;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;z-index:50}
+.sb-logo{padding:24px 18px 20px;border-bottom:1px solid var(--b1);margin-bottom:8px}
+.sb-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;color:var(--lime);letter-spacing:-.3px}
+.sb-logo-sub{font-size:9px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;margin-top:1px}
+.nb{display:flex;align-items:center;gap:9px;padding:10px 18px;cursor:pointer;color:var(--muted);font-size:12px;font-weight:500;border:none;background:none;width:100%;text-align:left;transition:all .12s;position:relative}
+.nb:hover{color:var(--text);background:var(--s2)}
+.nb.on{color:var(--lime);background:rgba(184,255,69,.05)}
+.nb.on::after{content:'';position:absolute;right:0;top:8px;bottom:8px;width:2px;background:var(--lime);border-radius:1px}
+.nb-ic{font-size:13px;width:18px;text-align:center}
+.sb-foot{margin:auto 12px 0;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:9px 11px;display:flex;align-items:center;gap:7px}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:.3s}
+.ai-dot.on{background:var(--lime);box-shadow:0 0 7px var(--lime)}
+.ai-txt{font-size:10px;color:var(--muted)}
+
+/* ── MAIN ── */
+.main{margin-left:186px;min-height:100vh}
+.page{display:none}
+.page.on{display:block;animation:fu .18s ease}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CREATE LAYOUT ── */
+.cl{display:grid;grid-template-columns:1fr 352px;min-height:100vh}
+.cl-l{padding:30px 28px;border-right:1px solid var(--b1);overflow-y:auto}
+.cl-r{background:var(--s1);padding:28px 20px;overflow-y:auto;position:sticky;top:0;height:100vh}
+
+/* ── TYPOGRAPHY ── */
+.pg-h{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;letter-spacing:-.5px;margin-bottom:3px}
+.pg-s{color:var(--muted);font-size:12px;margin-bottom:24px}
+.sec{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:9px;display:block}
+
+/* ── PLATFORM CARDS ── */
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.pc{border:1.5px solid var(--b1);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .18s;user-select:none;background:var(--s1)}
+.pc:hover{border-color:var(--b2);background:var(--s2)}
+.pc.sel{border-color:var(--cc);background:rgba(var(--cr),.07)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.pc-icon{font-size:17px}
+.pc-tick{width:16px;height:16px;border-radius:50%;background:var(--cc,#333);display:flex;align-items:center;justify-content:center;font-size:8px;color:#000;opacity:0;transform:scale(.3);transition:all .18s cubic-bezier(.34,1.56,.64,1)}
+.pc.sel .pc-tick{opacity:1;transform:scale(1)}
+.pc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;transition:color .15s}
+.pc.sel .pc-name{color:var(--cc)}
+.pc-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.pc-line{height:1.5px;background:var(--b1);border-radius:1px;margin-top:9px;overflow:hidden}
+.pc-line span{display:block;height:100%;background:var(--cc);width:0;transition:width .28s}
+.pc.sel .pc-line span{width:100%}
+.pc-ig1{--cc:#e1306c;--cr:225,48,108}
+.pc-ig2{--cc:#c13584;--cr:193,53,132}
+.pc-tt{--cc:#ff0050;--cr:255,0,80}
+.pc-tw{--cc:#1d9bf0;--cr:29,155,240}
+
+/* ── COLLAB ROW ── */
+.collab-row{background:var(--s2);border:1px solid var(--b1);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:11px;margin-bottom:16px;opacity:.3;pointer-events:none;transition:opacity .2s}
+.collab-row.on{opacity:1;pointer-events:all}
+.collab-info strong{font-size:12px;font-weight:600;display:block}
+.collab-info span{font-size:10px;color:var(--muted)}
+.collab-row input{background:var(--s3);border:1px solid var(--b1);border-radius:7px;color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;width:140px;outline:none;transition:border-color .15s}
+.collab-row input:focus{border-color:var(--ig)}
+.collab-row input::placeholder{color:var(--dim)}
+
+/* ── CHIPS ── */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.chip{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:1.5px solid var(--b1);background:var(--s2);cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);transition:all .13s;user-select:none}
+.chip input{display:none}
+.chip.on{border-color:var(--lime);color:var(--lime);background:rgba(184,255,69,.06)}
+
+/* ── UPLOAD ZONE ── */
+.drop{border:1.5px dashed var(--b2);border-radius:var(--r);padding:24px;text-align:center;cursor:pointer;transition:all .18s;background:var(--s1);margin-bottom:20px}
+.drop:hover,.drop.drag{border-color:var(--lime);background:rgba(184,255,69,.03)}
+.drop-icon{font-size:24px;margin-bottom:5px}
+.drop-txt{color:var(--muted);font-size:12px}
+.drop-file{color:var(--lime);font-size:11px;font-weight:600;margin-top:4px}
+.prev-img{width:100%;max-height:200px;object-fit:cover;border-radius:10px;display:none;margin-top:10px}
+
+/* ── FIELDS ── */
+.fb{margin-bottom:18px}
+.frow{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.fl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600}
+.fa{display:flex;gap:4px}
+textarea,input[type=text],input[type=datetime-local]{width:100%;background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;color:var(--text);padding:10px 12px;font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color .15s;resize:vertical}
+textarea:focus,input:focus{border-color:var(--lime)}
+textarea::placeholder,input::placeholder{color:var(--dim)}
+.char{text-align:right;font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;border-radius:var(--rs,7px);border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;transition:all .13s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.btn-lime{background:var(--lime);color:#000}
+.btn-lime:hover{background:var(--lime2)}
+.btn-ghost{background:var(--s2);color:var(--text);border:1.5px solid var(--b1)}
+.btn-ghost:hover{border-color:var(--b2)}
+.btn-del{background:rgba(255,77,141,.1);color:var(--pink);border:1.5px solid rgba(255,77,141,.2)}
+.btn-ai{background:rgba(155,109,255,.12);color:var(--purple);border:1.5px solid rgba(155,109,255,.25)}
+.btn-ai:hover{background:rgba(155,109,255,.22)}
+.btn-sm{padding:7px 12px}
+.btn-xs{padding:4px 9px;font-size:11px}
+.arow{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px}
+
+/* ── AI PANEL ── */
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.ai-badge{background:rgba(155,109,255,.15);border:1px solid rgba(155,109,255,.3);border-radius:5px;padding:2px 7px;font-size:9px;color:var(--purple);font-weight:700;letter-spacing:1px}
+.ai-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.tone-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px}
+.tone-btn{padding:7px;border-radius:7px;border:1.5px solid var(--b1);background:var(--s2);color:var(--muted);cursor:pointer;font-size:11px;font-weight:600;text-align:center;transition:all .13s}
+.tone-btn:hover{border-color:var(--b2);color:var(--text)}
+.tone-btn.on{border-color:var(--purple);color:var(--purple);background:rgba(155,109,255,.1)}
+.ai-input-wrap{background:var(--s2);border:1.5px solid var(--b1);border-radius:9px;overflow:hidden;margin-bottom:9px}
+.ai-input-wrap textarea{border:none;border-radius:0;background:transparent;padding:10px 12px;font-size:12px;min-height:66px}
+.ai-input-wrap textarea:focus{border:none;outline:none}
+.ai-foot{padding:7px 9px;border-top:1px solid var(--b1);display:flex;gap:4px}
+.ai-result{background:rgba(155,109,255,.06);border:1.5px solid rgba(155,109,255,.2);border-radius:9px;padding:12px;margin-bottom:10px;display:none}
+.ai-result-lbl{font-size:9px;color:var(--purple);letter-spacing:1.5px;font-weight:700;margin-bottom:6px}
+.ai-result-body{font-size:12px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.ai-result-act{display:flex;gap:5px;margin-top:8px}
+.divider{height:1px;background:var(--b1);margin:16px 0}
+.hq{display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto}
+.hq-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:7px}
+.hq-item:hover{border-color:var(--b2)}
+.hq-name{font-size:11px;font-weight:600}
+.hq-cnt{font-size:9px;color:var(--muted)}
+
+/* ── OTHER PAGES ── */
+.op{padding:30px 34px;max-width:860px}
+.stats{display:flex;gap:9px;margin-bottom:22px}
+.stat{flex:1;background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:14px}
+.stat-n{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;color:var(--lime);line-height:1}
+.stat-l{font-size:9px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:1.5px}
+.qi{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--s1);border:1px solid var(--b1);border-radius:11px;margin-bottom:7px;transition:border-color .13s}
+.qi:hover{border-color:var(--b2)}
+.qi-thumb{width:40px;height:40px;border-radius:7px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.qi-info{flex:1;min-width:0}
+.qi-cap{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qi-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.bdg{display:inline-flex;align-items:center;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.5px}
+.b-ig{background:rgba(225,48,108,.15);color:var(--ig)}
+.b-tt{background:rgba(255,0,80,.15);color:var(--tt)}
+.b-tw{background:rgba(29,155,240,.15);color:var(--tw)}
+.b-pend{background:rgba(184,255,69,.1);color:var(--lime)}
+.b-pub{background:rgba(0,255,136,.1);color:#00ff88}
+.b-fail{background:rgba(255,77,141,.1);color:var(--pink)}
+.hgc{background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:14px;margin-bottom:7px;transition:border-color .13s}
+.hgc:hover{border-color:var(--b2)}
+.hgc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hgc-n{font-weight:600;font-size:12px}
+.hgc-u{font-size:10px;color:var(--muted)}
+.hgc-t{font-size:11px;color:var(--muted);line-height:1.7}
+.hgc-a{display:flex;gap:5px;margin-top:8px}
+.log-r{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--b1)}
+.log-d{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.log-d.success{background:#00ff88}
+.log-d.failed{background:var(--pink)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.1);border-top-color:var(--purple);border-radius:50%;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+#toast{position:fixed;bottom:24px;right:24px;padding:10px 16px;border-radius:9px;font-size:12px;z-index:9999;transform:translateY(50px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:rgba(184,255,69,.12);border:1px solid rgba(184,255,69,.3);color:var(--lime)}
+#toast.error{background:rgba(255,77,141,.12);border:1px solid rgba(255,77,141,.3);color:var(--pink)}
+#toast.info{background:rgba(155,109,255,.12);border:1px solid rgba(155,109,255,.3);color:var(--purple)}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sb">
+  <div class="sb-logo">
+    <div class="sb-logo-text">Jo's Studio</div>
+    <div class="sb-logo-sub">Social Dashboard</div>
+  </div>
+  <button class="nb on" onclick="go('create',this)"><span class="nb-ic">✦</span>Create Post</button>
+  <button class="nb" onclick="go('queue',this)"><span class="nb-ic">◷</span>Queue</button>
+  <button class="nb" onclick="go('hashtags',this)"><span class="nb-ic">#</span>Hashtags</button>
+  <button class="nb" onclick="go('accounts',this)"><span class="nb-ic">◎</span>Accounts</button>
+  <button class="nb" onclick="go('logs',this)"><span class="nb-ic">≡</span>Activity</button>
+  <div class="sb-foot">
+    <div class="ai-dot" id="aidot"></div>
+    <div class="ai-txt" id="aitxt">Checking AI…</div>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ═══ CREATE ═══ -->
+<div class="page on" id="page-create">
+ <div class="cl">
+  <div class="cl-l">
+    <div class="pg-h">New Post</div>
+    <div class="pg-s">Choose platforms → upload media → write caption → schedule</div>
+
+    <!-- PLATFORMS -->
+    <span class="sec">Post to</span>
+    <div class="pc-grid">
+      <div class="pc pc-ig1" onclick="toggleP(this,'ig1')">
+        <div class="pc-top"><span class="pc-icon">📸</span><div class="pc-tick">✓</div></div>
+        <div class="pc-name" id="lbl-ig1">Instagram 1</div>
+        <div class="pc-sub">Main account</div>
+        <div class="pc-line"><span></span></div>
+      </div>
+      <div class="pc pc-ig2" onclick="toggleP(this,'ig2')">
+        <div class="pc-top"><span class="pc-icon">📸</span><div class="pc-tick">✓</div></div>
+        <div class="pc-name" id="lbl-ig2">Instagram 2</div>
+        <div class="pc-sub">Second account</div>
+        <div class="pc-line"><span></span></div>
+      </div>
+      <div class="pc pc-tt" onclick="toggleP(this,'tiktok')">
+        <div class="pc-top"><span class="pc-icon">🎵</span><div class="pc-tick">✓</div></div>
+        <div class="pc-name">TikTok</div>
+        <div class="pc-sub">Your TikTok</div>
+        <div class="pc-line"><span></span></div>
+      </div>
+      <div class="pc pc-tw" onclick="toggleP(this,'twitter')">
+        <div class="pc-top"><span class="pc-icon">𝕏</span><div class="pc-tick">✓</div></div>
+        <div class="pc-name">X / Twitter</div>
+        <div class="pc-sub">Your Twitter</div>
+        <div class="pc-line"><span></span></div>
+      </div>
+    </div>
+
+    <!-- COLLAB (shows when IG selected) -->
+    <div class="collab-row" id="collab">
+      <span style="font-size:15px">🤝</span>
+      <div class="collab-info">
+        <strong>Add Collaborator</strong>
+        <span>Tag a co-author on Instagram</span>
+      </div>
+      <input type="text" id="collab-h" placeholder="@username">
+    </div>
+
+    <!-- CHIPS -->
+    <div class="chips">
+      <label class="chip" id="chip-story" onclick="toggleChip(this)"><input type="checkbox" id="opt-story"> 📖 Story</label>
+      <label class="chip" id="chip-reel"  onclick="toggleChip(this)"><input type="checkbox" id="opt-reel">  🎬 Reel</label>
+    </div>
+
+    <!-- MEDIA -->
+    <span class="sec">Media</span>
+    <div class="drop" id="drop" onclick="document.getElementById('fi').click()">
+      <div class="drop-icon">＋</div>
+      <div class="drop-txt">Click or drag your photo / video here</div>
+      <div class="drop-file" id="drop-name"></div>
+    </div>
+    <input type="file" id="fi" accept="image/*,video/*" style="display:none">
+    <img  id="ip" class="prev-img">
+    <video id="vp" class="prev-img" controls style="display:none"></video>
+
+    <!-- CAPTION -->
+    <div class="fb">
+      <div class="frow">
+        <span class="fl">Caption</span>
+        <div class="fa"><button class="btn btn-ai btn-xs" onclick="quickAI('caption')">✦ AI Write</button></div>
+      </div>
+      <textarea id="caption" rows="4" placeholder="Write your caption…" oninput="ucc()"></textarea>
+      <div class="char"><span id="cc">0</span> chars</div>
+    </div>
+
+    <!-- HASHTAGS -->
+    <div class="fb">
+      <div class="frow">
+        <span class="fl">Hashtags</span>
+        <div class="fa">
+          <button class="btn btn-ai btn-xs" onclick="quickAI('hashtags')">✦ AI Tags</button>
+          <button class="btn btn-ghost btn-xs" onclick="go('hashtags',null)">Library</button>
+        </div>
+      </div>
+      <textarea id="hashtags" rows="2" placeholder="#yourtag #creator #viral …"></textarea>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div class="fb">
+      <div class="frow"><span class="fl">Schedule Date &amp; Time</span></div>
+      <input type="datetime-local" id="sched">
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="arow">
+      <button class="btn btn-lime" onclick="doSchedule()">⏱ Schedule</button>
+      <button class="btn btn-ghost" onclick="doNow()">🚀 Publish Now</button>
+      <button class="btn btn-ghost" style="color:var(--muted)" onclick="clearAll()">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- AI RIGHT PANEL -->
+  <div class="cl-r">
+    <div class="ai-header">
+      <span class="ai-badge">LOCAL AI</span>
+      <span class="ai-title">AI Assistant</span>
+    </div>
+
+    <span class="sec" style="display:block;margin-bottom:7px">Tone</span>
+    <div class="tone-grid">
+      <div class="tone-btn on" onclick="setTone(this,'authentic & relatable')">✨ Authentic</div>
+      <div class="tone-btn" onclick="setTone(this,'fun & playful')">🎉 Playful</div>
+      <div class="tone-btn" onclick="setTone(this,'inspirational')">🔥 Inspire</div>
+      <div class="tone-btn" onclick="setTone(this,'mysterious & bold')">🌙 Mystical</div>
+      <div class="tone-btn" onclick="setTone(this,'professional')">💼 Pro</div>
+      <div class="tone-btn" onclick="setTone(this,'funny & witty')">😂 Funny</div>
+    </div>
+
+    <span class="sec" style="display:block;margin-top:14px;margin-bottom:7px">Describe your post</span>
+    <div class="ai-input-wrap">
+      <textarea id="ai-p" placeholder="e.g. beach photo at sunset, golden hour, summer vibes…" style="min-height:66px"></textarea>
+      <div class="ai-foot">
+        <button class="btn btn-ai btn-xs" id="b1" onclick="genAI('caption')">Caption</button>
+        <button class="btn btn-ai btn-xs" id="b2" onclick="genAI('hashtags')">Hashtags</button>
+        <button class="btn btn-ai btn-xs" id="b3" onclick="genAI('both')" style="background:rgba(155,109,255,.22)">✦ Both</button>
+      </div>
+    </div>
+
+    <div class="ai-result" id="ai-res">
+      <div class="ai-result-lbl">AI GENERATED</div>
+      <div class="ai-result-body" id="ai-body"></div>
+      <div class="ai-result-act">
+        <button class="btn btn-ghost btn-xs" onclick="applyAI('caption')">→ Use Caption</button>
+        <button class="btn btn-ghost btn-xs" onclick="applyAI('hashtags')">→ Use Hashtags</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <span class="sec" style="display:block;margin-bottom:9px">Saved Hashtag Sets</span>
+    <div class="hq" id="hq"><div style="color:var(--muted);font-size:11px">Loading…</div></div>
+  </div>
+ </div>
+</div>
+
+<!-- ═══ QUEUE ═══ -->
+<div class="page" id="page-queue">
+  <div class="op">
+    <div class="pg-h" style="margin-bottom:3px">Queue</div>
+    <div class="pg-s" style="margin-bottom:20px">Your scheduled and published posts</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="sp">0</div><div class="stat-l">Pending</div></div>
+      <div class="stat"><div class="stat-n" id="spub">0</div><div class="stat-l">Published</div></div>
+      <div class="stat"><div class="stat-n" id="sf">0</div><div class="stat-l">Failed</div></div>
+    </div>
+    <div id="ql"></div>
+  </div>
+</div>
+
+<!-- ═══ HASHTAGS ═══ -->
+<div class="page" id="page-hashtags">
+  <div class="op">
+    <div class="pg-h" style="margin-bottom:3px">Hashtag Library</div>
+    <div class="pg-s" style="margin-bottom:22px">Save your best sets and reuse in one click</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <span class="sec">Save New Set</span>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input type="text" id="hgn" placeholder="Name (e.g. Travel, Fitness…)">
+          <textarea id="hgt" rows="4" placeholder="#tag1 #tag2 #tag3 …"></textarea>
+          <button class="btn btn-lime btn-sm" onclick="saveHG()" style="align-self:flex-start">Save Set</button>
+        </div>
+      </div>
+      <div id="hglist"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACCOUNTS ═══ -->
+<div class="page" id="page-accounts">
+  <div class="op">
+    <div class="pg-h" style="margin-bottom:3px">Accounts</div>
+    <div class="pg-s" style="margin-bottom:22px">Edit your .env file to connect each platform</div>
+    <div id="acclist"></div>
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:16px;margin-top:14px">
+      <span class="sec" style="display:block;margin-bottom:10px">Setup Guide</span>
+      <div style="font-size:12px;color:var(--muted);line-height:2.2">
+        <strong style="color:var(--text)">Instagram</strong> → developers.facebook.com → Create App → Instagram Graph API → Generate Token<br>
+        <strong style="color:var(--text)">TikTok</strong> → developers.tiktok.com → Create App → Content Posting API → Get Token<br>
+        <strong style="color:var(--text)">X / Twitter</strong> → developer.twitter.com → Create Project → Keys &amp; Tokens<br>
+        <strong style="color:var(--text)">Ollama AI</strong> → ollama.com → Install → <code style="color:var(--lime)">ollama pull llama3</code> → <code style="color:var(--lime)">ollama serve</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGS ═══ -->
+<div class="page" id="page-logs">
+  <div class="op">
+    <div class="pg-h" style="margin-bottom:3px">Activity</div>
+    <div class="pg-s" style="margin-bottom:22px">Every post attempt logged here</div>
+    <div style="background:var(--s1);border:1px solid var(--b1);border-radius:11px;padding:0 18px">
+      <div id="logslist"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+<div id="toast"></div>
+
+<script>
+const sel=new Set();
+let file=null,tone='authentic & relatable',aiData=null;
+
+/* NAV */
+function go(pg,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+pg).classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(pg==='queue')loadQ();
+  if(pg==='hashtags')loadHG();
+  if(pg==='accounts')loadAccs();
+  if(pg==='logs')loadLogs();
+}
+
+/* TOAST */
+function toast(msg,t='success'){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className=`show ${t}`;
+  clearTimeout(el._t);el._t=setTimeout(()=>el.className='',3000);
+}
+
+/* PLATFORM TOGGLE */
+function toggleP(card,id){
+  if(sel.has(id)){sel.delete(id);card.classList.remove('sel');}
+  else{sel.add(id);card.classList.add('sel');}
+  document.getElementById('collab').classList.toggle('on',sel.has('ig1')||sel.has('ig2'));
+}
+
+/* CHIPS */
+function toggleChip(c){setTimeout(()=>c.classList.toggle('on',c.querySelector('input').checked),0);}
+
+/* FILE UPLOAD */
+document.getElementById('fi').addEventListener('change',e=>{if(e.target.files[0])upload(e.target.files[0]);});
+const dz=document.getElementById('drop');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])upload(e.dataTransfer.files[0]);});
+
+async function upload(f){
+  document.getElementById('drop-name').textContent='Uploading…';
+  const fd=new FormData();fd.append('media',f);
+  try{
+    const r=await fetch('/api/upload',{method:'POST',body:fd});
+    file=await r.json();
+    document.getElementById('drop-name').textContent='✓ '+f.name;
+    const iv=f.type.startsWith('video/');
+    const img=document.getElementById('ip'),vid=document.getElementById('vp');
+    if(iv){vid.src=file.url;vid.style.display='block';img.style.display='none';}
+    else{img.src=file.url;img.style.display='block';vid.style.display='none';}
+    toast('Media uploaded!');
+  }catch{toast('Upload failed','error');}
+}
+
+function ucc(){document.getElementById('cc').textContent=document.getElementById('caption').value.length;}
+function setTone(el,t){document.querySelectorAll('.tone-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');tone=t;}
+
+/* AI */
+function quickAI(type){
+  if(!document.getElementById('ai-p').value.trim()&&!document.getElementById('caption').value.trim()){
+    toast('Describe your post in the AI panel →','info');return;
+  }
+  genAI(type);
+}
+
+async function genAI(type){
+  const prompt=document.getElementById('ai-p').value.trim()||document.getElementById('caption').value.trim();
+  if(!prompt){toast('Describe your post first','info');return;}
+  ['b1','b2','b3'].forEach(b=>document.getElementById(b).disabled=true);
+  const b3=document.getElementById('b3');b3.innerHTML='<div class="spin"></div>';
+  try{
+    const r=await fetch('/api/ai/generate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt,type,context:{tone,platform:[...sel].join('+')||'Instagram'}})});
+    const d=await r.json();
+    if(d.error){toast(d.error,'error');return;}
+    let display=d.result;
+    try{const j=JSON.parse(d.result);aiData=j;display=`CAPTION:\n${j.caption}\n\nHASHTAGS:\n${j.hashtags}`;}
+    catch{aiData={raw:d.result,type};}
+    document.getElementById('ai-res').style.display='block';
+    document.getElementById('ai-body').textContent=display;
+  }catch{toast('Ollama not running — open a new PowerShell and run: ollama serve','error');}
+  finally{['b1','b2','b3'].forEach(b=>document.getElementById(b).disabled=false);b3.innerHTML='✦ Both';}
+}
+
+function applyAI(tgt){
+  const id=tgt==='caption'?'caption':'hashtags';
+  if(aiData?.caption)document.getElementById(id).value=tgt==='caption'?aiData.caption:aiData.hashtags;
+  else document.getElementById(id).value=document.getElementById('ai-body').textContent;
+  ucc();toast(tgt==='caption'?'Caption applied!':'Hashtags applied!');
+}
+
+/* POST */
+function validate(){
+  if(!file){toast('Upload media first','info');return false;}
+  if(!document.getElementById('caption').value.trim()){toast('Add a caption','info');return false;}
+  if(!sel.size){toast('Select at least one platform','info');return false;}
+  return true;
+}
+function mkBody(t){
+  return{
+    caption:document.getElementById('caption').value.trim(),
+    hashtags:document.getElementById('hashtags').value.trim(),
+    collab_handle:document.getElementById('collab-h').value.trim(),
+    media_path:file.path,
+    media_type:file.mimetype?.startsWith('video/')?'VIDEO':'IMAGE',
+    platforms:[...sel],scheduled_at:t,
+    is_story:document.getElementById('opt-story').checked?1:0
+  };
+}
+async function doSchedule(){
+  if(!validate())return;
+  const t=document.getElementById('sched').value;
+  if(!t){toast('Pick a date & time','info');return;}
+  await fetch('/api/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(mkBody(t))});
+  toast('Post scheduled! ✓');clearAll();
+}
+async function doNow(){
+  if(!validate())return;
+  const now=new Date().toISOString().slice(0,16);
+  const{id}=await(await fetch('/api/posts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(mkBody(now))})).json();
+  toast('Publishing…','info');
+  const r=await(await fetch(`/api/posts/${id}/publish-now`,{method:'POST'})).json();
+  toast(r.results?.every(x=>x.success)?'🚀 Published!':'Some failed — check Activity',r.results?.every(x=>x.success)?'success':'error');
+  clearAll();
+}
+function clearAll(){
+  file=null;
+  ['caption','hashtags','collab-h'].forEach(id=>document.getElementById(id).value='');
+  ['ip','vp'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('drop-name').textContent='';
+  document.getElementById('ai-res').style.display='none';
+  document.getElementById('cc').textContent='0';
+  sel.clear();document.querySelectorAll('.pc').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('collab').classList.remove('on');
+  const d=new Date();d.setHours(d.getHours()+1,0,0,0);
+  document.getElementById('sched').value=d.toISOString().slice(0,16);
+}
+
+/* QUEUE */
+function platBdg(pl){
+  if(pl==='ig1'||pl==='ig2')return`<span class="bdg b-ig">${pl.toUpperCase()}</span>`;
+  if(pl==='tiktok')return`<span class="bdg b-tt">TT</span>`;
+  if(pl==='twitter')return`<span class="bdg b-tw">𝕏</span>`;
+  return '';
+}
+async function loadQ(){
+  const posts=await(await fetch('/api/posts')).json();
+  document.getElementById('sp').textContent=posts.filter(p=>p.status==='pending').length;
+  document.getElementById('spub').textContent=posts.filter(p=>p.status==='published').length;
+  document.getElementById('sf').textContent=posts.filter(p=>p.status==='failed').length;
+  const el=document.getElementById('ql');
+  if(!posts.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:18px 0">Queue is empty</div>';return;}
+  el.innerHTML=posts.map(p=>`<div class="qi">
+    <div class="qi-thumb">${p.media_type==='VIDEO'?'🎬':'🖼'}</div>
+    <div class="qi-info">
+      <div class="qi-cap">${p.caption||'(no caption)'}</div>
+      <div class="qi-meta">📅 ${p.scheduled_at?new Date(p.scheduled_at).toLocaleString():'-'}${p.is_story?' · Story':''}</div>
+    </div>
+    <div style="display:flex;gap:3px">${(p.platforms||[]).map(platBdg).join('')}</div>
+    <span class="bdg b-${p.status==='pending'?'pend':p.status==='published'?'pub':'fail'}">${p.status}</span>
+    ${p.status==='pending'?`<button class="btn btn-ghost btn-xs" onclick="pubQ(${p.id})">↑ Now</button>`:''}
+    <button class="btn btn-del btn-xs" onclick="delP(${p.id})">✕</button>
+  </div>`).join('');
+}
+async function delP(id){await fetch(`/api/posts/${id}`,{method:'DELETE'});toast('Deleted','info');loadQ();}
+async function pubQ(id){toast('Publishing…','info');await fetch(`/api/posts/${id}/publish-now`,{method:'POST'});toast('Done!');loadQ();}
+
+/* HASHTAGS */
+async function loadHG(){
+  const gs=await(await fetch('/api/hashtags')).json();
+  const el=document.getElementById('hglist'),hq=document.getElementById('hq');
+  if(!gs.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px">No sets yet — save your first one!</div>';
+    hq.innerHTML='<div style="color:var(--muted);font-size:11px">No saved sets</div>';return;
+  }
+  el.innerHTML=gs.map(g=>`<div class="hgc">
+    <div class="hgc-h"><span class="hgc-n">${g.name}</span><span class="hgc-u">Used ${g.used_count}×</span></div>
+    <div class="hgc-t">${g.tags.slice(0,100)}${g.tags.length>100?'…':''}</div>
+    <div class="hgc-a">
+      <button class="btn btn-ghost btn-xs" onclick="useHG(${g.id},\`${g.tags.replace(/`/g,'\\`')}\`)">Use</button>
+      <button class="btn btn-del btn-xs" onclick="delHG(${g.id})">Delete</button>
+    </div></div>`).join('');
+  hq.innerHTML=gs.slice(0,6).map(g=>`<div class="hq-item">
+    <div><div class="hq-name">${g.name}</div><div class="hq-cnt">Used ${g.used_count}×</div></div>
+    <button class="btn btn-ghost btn-xs" onclick="useHG(${g.id},\`${g.tags.replace(/`/g,'\\`')}\`)">Use</button>
+  </div>`).join('');
+}
+async function useHG(id,tags){
+  document.getElementById('hashtags').value=tags;
+  await fetch(`/api/hashtags/${id}/use`,{method:'POST'});
+  toast('Hashtags applied!');loadHG();
+}
+async function saveHG(){
+  const n=document.getElementById('hgn').value.trim(),t=document.getElementById('hgt').value.trim();
+  if(!n||!t){toast('Fill in name and hashtags','info');return;}
+  await fetch('/api/hashtags',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,tags:t})});
+  document.getElementById('hgn').value='';document.getElementById('hgt').value='';
+  toast('Saved!');loadHG();
+}
+async function delHG(id){await fetch(`/api/hashtags/${id}`,{method:'DELETE'});toast('Deleted','info');loadHG();}
+
+/* ACCOUNTS */
+async function loadAccs(){
+  const accs=await(await fetch('/api/accounts')).json();
+  const icons={ig1:'📸',ig2:'📸',tt:'🎵',tw:'𝕏'};
+  if(accs.find(a=>a.id==='ig1'))document.getElementById('lbl-ig1').textContent=accs.find(a=>a.id==='ig1').name;
+  if(accs.find(a=>a.id==='ig2'))document.getElementById('lbl-ig2').textContent=accs.find(a=>a.id==='ig2').name;
+  document.getElementById('acclist').innerHTML=accs.map(a=>`<div class="qi" style="margin-bottom:7px">
+    <div class="qi-thumb" style="font-size:17px">${icons[a.id]||'◎'}</div>
+    <div class="qi-info"><div class="qi-cap">${a.name}</div></div>
+    <span style="font-size:11px;font-weight:600;color:${a.configured?'#00ff88':'var(--muted)'}">
+      ${a.configured?'✓ Connected':'✗ Add to .env'}
+    </span></div>`).join('');
+}
+
+/* LOGS */
+async function loadLogs(){
+  const logs=await(await fetch('/api/logs')).json();
+  const el=document.getElementById('logslist');
+  if(!logs.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:18px 0">No activity yet</div>';return;}
+  el.innerHTML=logs.map(l=>`<div class="log-r">
+    <div class="log-d ${l.status}"></div>
+    <div style="flex:1;font-size:12px"><strong>${l.platform}</strong> — Post #${l.post_id} — <span style="color:${l.status==='success'?'#00ff88':'var(--pink)'}">${l.status}</span></div>
+    <div style="font-size:10px;color:var(--muted)">${new Date(l.logged_at).toLocaleString()}</div>
+  </div>`).join('');
+}
+
+/* AI STATUS */
+async function checkAI(){
+  try{
+    const{online}=await(await fetch('/api/ai/status')).json();
+    document.getElementById('aidot').className='ai-dot'+(online?' on':'');
+    document.getElementById('aitxt').textContent=online?'AI Online':'AI Offline';
+  }catch{}
+}
+checkAI();setInterval(checkAI,15000);loadHG();
+const d=new Date();d.setHours(d.getHours()+1,0,0,0);
+document.getElementById('sched').value=d.toISOString().slice(0,16);
+</script>
+</body>
+</html>

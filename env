@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────
+#  JO'S STUDIO  —  fill in your keys here
+# ─────────────────────────────────────────
+
+IG_1_NAME=My Main Instagram
+IG_1_ACCESS_TOKEN=your_token_here
+IG_1_BUSINESS_ID=your_id_here
+
+IG_2_NAME=My Second Instagram
+IG_2_ACCESS_TOKEN=your_token_here
+IG_2_BUSINESS_ID=your_id_here
+
+TIKTOK_ACCESS_TOKEN=your_token_here
+TIKTOK_OPEN_ID=your_open_id_here
+
+TW_API_KEY=your_key_here
+TW_API_SECRET=your_secret_here
+TW_ACCESS_TOKEN=your_token_here
+TW_ACCESS_SECRET=your_secret_here
+
+GROQ_API_KEY=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
+
+PORT=3000
